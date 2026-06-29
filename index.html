@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+title>郭锴熠 暑假课表</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f5f1ea;
+    --bg-card: #ffffff;
+    --text: #3d3933;
+    --text-soft: #78716c;
+    --text-mute: #a8a29e;
+    --border: #e7e2d8;
+    --border-soft: #f0ebe1;
+    --shadow: 0 1px 3px rgba(60, 50, 40, .04), 0 4px 12px rgba(60, 50, 40, .04);
+    --slot-label-w: 130px;
+    --brand: #57534e;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    padding: 32px 20px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1320px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, #57534e 0%, #292524 100%);
+    color: #fafaf9; padding: 36px 32px; border-radius: 20px;
+    margin-bottom: 24px; box-shadow: var(--shadow);
+  }
+  header h1 { font-size: 30px; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px; }
+  header .meta { opacity: .8; font-size: 15px; letter-spacing: 0.3px; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px; margin-bottom: 20px;
+  }
+  .stat-card {
+    padding: 22px 18px; border-radius: 14px; text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .stat-num { font-size: 36px; font-weight: 700; line-height: 1.1; font-feature-settings: "tnum"; }
+  .stat-subj { font-size: 13px; opacity: .8; margin-top: 6px; letter-spacing: 1px; }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 20px;
+    background: var(--bg-card); border-radius: 12px; margin-bottom: 20px;
+    font-size: 14px; color: var(--text-soft); box-shadow: var(--shadow);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+  /* 视图切换 */
+  .view-switch {
+    display: flex; gap: 8px; padding: 6px;
+    background: var(--bg-card); border-radius: 12px;
+    margin-bottom: 20px; box-shadow: var(--shadow);
+    width: fit-content;
+  }
+  .view-btn {
+    padding: 8px 18px; border-radius: 8px;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--text-soft); font-size: 14px;
+    transition: all .15s;
+  }
+  .view-btn.active { background: var(--brand); color: #fff; font-weight: 500; }
+
+  .view-panel { display: none; }
+  .view-panel.active { display: block; }
+
+  /* 列表视图 */
+  .list-week {
+    background: var(--bg-card); border-radius: 16px;
+    padding: 20px 24px; margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .list-week h2 {
+    font-size: 18px; color: var(--text);
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .list-day {
+    display: grid; grid-template-columns: 90px 1fr; gap: 12px;
+    padding: 10px 0;
+  }
+  .list-date {
+    color: var(--text-mute); font-size: 13px;
+    text-align: right; padding-top: 2px;
+  }
+  .list-date b { color: var(--text); font-size: 15px; display: block; }
+  .list-cls { display: flex; flex-wrap: wrap; gap: 8px; }
+  .list-cls-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 8px;
+    font-size: 14px;
+  }
+
+  /* 网格视图（PC） */
+  .week {
+    background: var(--bg-card); border-radius: 16px;
+    padding: 20px 24px; margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .week h2 {
+    font-size: 18px; color: var(--text);
+    margin-bottom: 16px;
+  }
+  .week-grid {
+    display: grid;
+    grid-template-columns: var(--slot-label-w) repeat(7, 1fr);
+    grid-auto-rows: minmax(56px, auto);
+    gap: 4px;
+  }
+  .th-corner, .th, .slot-label, .cell, .cls {
+    border-radius: 8px;
+  }
+  .th {
+    padding: 8px 4px; text-align: center;
+    font-size: 13px; color: var(--text-soft);
+    background: transparent;
+  }
+  .th .th-d { font-weight: 600; color: var(--text); font-size: 14px; }
+  .th .th-wd { font-size: 12px; opacity: .7; margin-top: 2px; }
+  .th.out { opacity: .45; }
+  .slot-label {
+    padding: 10px 12px; display: flex; align-items: center; gap: 10px;
+    background: var(--bg); color: var(--text-soft);
+  }
+  .slot-label.narrow { padding: 6px 10px; }
+  .slot-icon { font-size: 18px; }
+  .slot-info { display: flex; flex-direction: column; }
+  .slot-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .slot-time { font-size: 11px; opacity: .8; }
+  .cell { background: var(--border-soft); min-height: 56px; }
+  .cell.narrow { min-height: 32px; }
+  .cell.out { background: transparent; }
+  .cell.empty { background: var(--border-soft); }
+  .cell.empty.narrow { background: var(--border-soft); }
+  .cell.has-cls { background: transparent; padding: 4px; }
+  .cls {
+    padding: 8px 10px;
+    font-size: 13px;
+    height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    overflow: hidden;
+  }
+  .cls-subject { font-weight: 600; }
+  .cls-time { font-size: 11px; opacity: .85; margin-top: 2px; }
+
+  /* 事件块 */
+  .event-block {
+    background: #fff7ed; color: #9a3412;
+    padding: 8px 10px; border-radius: 8px;
+    font-size: 13px; line-height: 1.4;
+    height: 100%; display: flex; flex-direction: column; justify-content: center;
+    border-left: 3px solid #ea580c;
+  }
+  .event-block .ev-name { font-weight: 600; }
+  .event-block .ev-meta { font-size: 11px; opacity: .8; margin-top: 2px; }
+
+  /* 待确认 / 飞跃理想 */
+  .gaps {
+    background: #fef3c7; border-left: 3px solid #f59e0b;
+    border-radius: 12px; padding: 18px 22px; margin-bottom: 20px;
+  }
+  .gaps h2 { font-size: 16px; color: #92400e; margin-bottom: 10px; }
+  .gaps ul { list-style: none; padding: 0; }
+  .gaps li { color: #78350f; font-size: 14px; line-height: 1.7; }
+  .gaps .reason { color: #92400e; font-size: 13px; opacity: .85; }
+
+  .events {
+    background: #fed7aa; border-left: 3px solid #ea580c;
+    border-radius: 12px; padding: 18px 22px; margin-bottom: 20px;
+  }
+  .events h2 { font-size: 16px; color: #7c2d12; margin-bottom: 10px; }
+  .events .ev-row { font-size: 14px; color: #7c2d12; line-height: 1.7; }
+
+  /* 移动端：默认显示列表视图，隐藏网格 */
+  @media (max-width: 700px) {
+    body { padding: 16px 12px; }
+    header { padding: 24px 20px; }
+    header h1 { font-size: 22px; }
+    .view-switch { display: none; } /* 移动端只显示列表 */
+    .view-panel.grid-view { display: none !important; }
+    .view-panel.list-view { display: block; }
+    .week { display: none; } /* 移动端直接隐藏 grid 容器 */
+  }
+
+  footer {
+    text-align: center; color: var(--text-mute);
+    font-size: 12px; padding: 24px 0 8px;
+  }
+  footer a { color: var(--text-soft); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  .loading {
+    text-align: center; padding: 60px 20px;
+    color: var(--text-mute); font-size: 14px;
+  }
+  .err {
+    background: #fee2e2; color: #991b1b;
+    padding: 16px; border-radius: 12px; font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1 id="hdr-title">课表</h1>
+    <div class="meta" id="hdr-meta"></div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+  <div class="legend" id="legend"></div>
+
+  <div class="view-switch" id="view-switch">
+    <button class="view-btn active" data-view="grid">📅 网格视图</button>
+    <button class="view-btn" data-view="list">📋 列表视图</button>
+  </div>
+
+  <div id="content">
+    <div class="loading">加载中…</div>
+  </div>
+
+  <footer>
+    由 OpenClaw 紫紫整理 · 数据来源：Grace · 最后更新 <span id="updated">—</span>
+  </footer>
+</div>
+
+<script>
+// ---------- 学科配色（莫兰迪） ----------
+const COLORS = {
+  '数学': { bg: '#f0f9ff', fg: '#0c4a6e', dot: '#0284c7' },
+  '物理': { bg: '#ecfdf5', fg: '#064e3b', dot: '#059669' },
+  '化学': { bg: '#fff1f2', fg: '#881337', dot: '#e11d48' },
+  '语文': { bg: '#faf5ff', fg: '#581c87', dot: '#7c3aed' },
+  '英语': { bg: '#fffbeb', fg: '#78350f', dot: '#d97706' },
+  '其他': { bg: '#f5f5f4', fg: '#44403c', dot: '#78716c' },
+};
+const ICONS = {
+  '数学': '➕', '物理': '⚛️', '化学': '🧪',
+  '语文': '📖', '英语': '🔤', '其他': '📚',
+};
+function colorOf(s) { return COLORS[s] || COLORS['其他']; }
+function iconOf(s)  { return ICONS[s] || '📌'; }
+
+// ---------- 时段定义（5 段） ----------
+const SLOTS = [
+  { key: 'morning', icon: '🌅', name: '上午',  time: '8:30 – 12:00', start: '08:30', end: '12:00', narrow: false },
+  { key: 'noon',    icon: '🍱', name: '午休',  time: '12:00 – 13:30', start: '12:00', end: '13:30', narrow: true  },
+  { key: 'afternoon', icon: '☀️', name: '下午', time: '13:30 – 17:30', start: '13:30', end: '17:30', narrow: false },
+  { key: 'dinner',  icon: '🍴', name: '晚餐',  time: '17:30 – 19:00', start: '17:30', end: '19:00', narrow: true  },
+  { key: 'evening', icon: '🌙', name: '晚上',  time: '19:00 – 21:00', start: '19:00', end: '21:00', narrow: false },
+];
+
+// ---------- 工具：日期处理 ----------
+const WD_CN = ['周日','周一','周二','周三','周四','周五','周六'];
+function parseDate(s) { return new Date(s + 'T00:00:00'); }
+function fmtMD(d) {
+  return (d.getMonth()+1) + '/' + d.getDate();
+}
+function eachDateInRange(startStr, endStr) {
+  const out = []; const cur = parseDate(startStr); const end = parseDate(endStr);
+  while (cur <= end) { out.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
+  return out;
+}
+function startOfWeek(d) {
+  // 中国习惯：周一为一周开始
+  const day = d.getDay(); // 0=Sun..6=Sat
+  const diff = day === 0 ? -6 : 1 - day;
+  const w = new Date(d);
+  w.setDate(d.getDate() + diff);
+  w.setHours(0,0,0,0);
+  return w;
+}
+
+// ---------- 主流程 ----------
+async function main() {
+  let data;
+  try {
+    const res = await fetch('./schedule.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    data = await res.json();
+  } catch (e) {
+    document.getElementById('content').innerHTML =
+      '<div class="err">加载 schedule.json 失败：' + e.message + '<br><br>如果你是访问部署后的 URL，可能部署未完成，请稍后重试。</div>';
+    return;
+  }
+  renderHeader(data);
+  renderStats(data);
+  renderLegend(data);
+  renderGaps(data);
+  renderEvents(data);
+  renderWeeks(data);
+  setupViewSwitch();
+  document.getElementById('updated').textContent = (data.updated_at || '').replace('T', ' ').slice(0, 16);
+}
+
+function renderHeader(data) {
+  document.getElementById('hdr-title').textContent = data.kid + ' 暑假课表';
+  const p = data.period || {};
+  document.getElementById('hdr-meta').textContent =
+    (p.label || '课表') + ' · ' + (p.start || '') + ' → ' + (p.end || '');
+}
+
+function renderStats(data) {
+  const counts = {};
+  data.classes.forEach(c => { counts[c.subject] = (counts[c.subject] || 0) + 1; });
+  const subjects = Object.keys(counts).sort();
+  let html = '';
+  subjects.forEach(s => {
+    const c = colorOf(s);
+    html += '<div class="stat-card" style="background:' + c.bg + ';color:' + c.fg + ';">'
+         +  '<div class="stat-num">' + counts[s] + '</div>'
+         +  '<div class="stat-subj">' + iconOf(s) + ' ' + s + '</div>'
+         +  '</div>';
+  });
+  html += '<div class="stat-card" style="background:#44403c;color:#fafaf9;">'
+       +  '<div class="stat-num">' + data.classes.length + '</div>'
+       +  '<div class="stat-subj">📊 总节数</div>'
+       +  '</div>';
+  document.getElementById('stats').innerHTML = html;
+}
+
+function renderLegend(data) {
+  const subjects = [...new Set(data.classes.map(c => c.subject))];
+  document.getElementById('legend').innerHTML = subjects.map(s => {
+    const c = colorOf(s);
+    return '<div class="legend-item"><span class="legend-dot" style="background:' + c.dot + '"></span>' + iconOf(s) + ' ' + s + '</div>';
+  }).join('');
+}
+
+function renderGaps(data) {
+  const gaps = data.gaps || [];
+  if (gaps.length === 0) return;
+  const html = '<div class="gaps"><h2>⚠️ 待确认</h2><ul>'
+    + gaps.map(g => '<li><b>' + g.subject + '</b> · ' + g.range + '<br><span class="reason">' + g.reason + '</span></li>').join('')
+    + '</ul></div>';
+  // 插入到 content 顶部
+  const c = document.getElementById('content');
+  c.insertAdjacentHTML('afterbegin', html);
+}
+
+function renderEvents(data) {
+  const events = data.events || [];
+  if (events.length === 0) return;
+  const html = '<div class="events"><h2>🚀 重要事件</h2>'
+    + events.map(e => '<div class="ev-row">• <b>' + e.name + '</b> · ' + e.start_date + ' → ' + e.end_date + ' · 📍 ' + (e.location || []).join(' · ') + (e.note ? ' · ' + e.note : '') + '</div>').join('')
+    + '</div>';
+  const c = document.getElementById('content');
+  c.insertAdjacentHTML('afterbegin', html);
+}
+
+function setupViewSwitch() {
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b === btn));
+      const view = btn.dataset.view;
+      document.querySelectorAll('.view-panel').forEach(p => {
+        p.classList.toggle('active', p.dataset.view === view);
+      });
+    });
+  });
+}
+
+// ---------- 周渲染 ----------
+function renderWeeks(data) {
+  const startStr = data.period && data.period.start;
+  const endStr   = data.period && data.period.end;
+  if (!startStr || !endStr) return;
+
+  const start = parseDate(startStr);
+  const end = parseDate(endStr);
+  const firstMonday = startOfWeek(start);
+
+  // 按周分块
+  const weeks = [];
+  let cur = new Date(firstMonday);
+  while (cur <= end) {
+    const weekStart = new Date(cur);
+    const weekEnd = new Date(cur); weekEnd.setDate(cur.getDate() + 6);
+    weeks.push({ start: weekStart, end: weekEnd });
+    cur.setDate(cur.getDate() + 7);
+  }
+
+  // 给每节课 / 事件建索引：date -> 课程 + 事件
+  const classesByDate = {};
+  data.classes.forEach(c => {
+    (classesByDate[c.date] = classesByDate[c.date] || []).push(c);
+  });
+  const eventsByDate = {};
+  (data.events || []).forEach(e => {
+    eachDateInRange(e.start_date, e.end_date).forEach(d => {
+      const ds = d.toISOString().slice(0,10);
+      (eventsByDate[ds] = eventsByDate[ds] || []).push(e);
+    });
+  });
+
+  const c = document.getElementById('content');
+  c.insertAdjacentHTML('beforeend',
+    '<div class="view-panel grid-view active" data-view="grid"></div>' +
+    '<div class="view-panel list-view" data-view="list"></div>');
+  const gridHost = c.querySelector('.view-panel.grid-view');
+  const listHost = c.querySelector('.view-panel.list-view');
+
+  weeks.forEach((w, idx) => {
+    gridHost.insertAdjacentHTML('beforeend', renderWeekGrid(w, classesByDate, eventsByDate, idx + 1));
+    listHost.insertAdjacentHTML('beforeend', renderWeekList(w, classesByDate, eventsByDate, idx + 1));
+  });
+}
+
+function renderWeekGrid(week, classesByDate, eventsByDate, weekNo) {
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(week.start); d.setDate(week.start.getDate() + i);
+    days.push(d);
+  }
+  // 用更直接的方式：判断是否在 period 范围内
+  const inPeriod = (d) => {
+    const ds = d.toISOString().slice(0,10);
+    // 通过全局 data.period 判定
+    const s = window.__periodStart, e = window.__periodEnd;
+    return ds >= s && ds <= e;
+  };
+
+  const monthLabel = (week.start.getMonth()+1) + '月';
+  let html = '<section class="week"><h2>第' + weekNo + '周 · ' + monthLabel + ' '
+           + fmtMD(week.start) + ' - ' + fmtMD(week.end) + '</h2><div class="week-grid">';
+
+  // 表头
+  html += '<div class="th-corner"></div>';
+  days.forEach((d, i) => {
+    const wd = WD_CN[d.getDay()];
+    const out = !inPeriod(d);
+    html += '<div class="th ' + (out ? 'out' : '') + '"><div class="th-d">' + fmtMD(d) + '</div><div class="th-wd">' + wd + '</div></div>';
+  });
+
+  // 5 个时段
+  SLOTS.forEach((slot, rowIdx) => {
+    const gridRow = rowIdx + 2; // 1-based, 表头占第 1 行
+    html += '<div class="slot-label ' + (slot.narrow ? 'narrow' : '') + '" style="grid-row:' + gridRow + ';">';
+    html += '<div class="slot-icon">' + slot.icon + '</div>';
+    html += '<div class="slot-info"><div class="slot-name">' + slot.name + '</div><div class="slot-time">' + slot.time + '</div></div>';
+    html += '</div>';
+
+    days.forEach((d, i) => {
+      const col = i + 2; // 1-based, slot-label 占第 1 列
+      const ds = d.toISOString().slice(0,10);
+      const out = !inPeriod(d);
+      const slotStart = slot.start;
+      const slotEnd = slot.end;
+
+      // 事件优先
+      const evs = eventsByDate[ds] || [];
+      const ev = evs.find(e => {
+        // 事件占满整天，跳过格子（让 slot 整体被一个事件块占）
+        return e.start_date <= ds && ds <= e.end_date;
+      });
+      if (ev) {
+        // 只在第一个 slot 显示事件块，其他 slot 该列留空（这里用 cell.out 简化）
+        // 改为：每个 slot 都铺一个事件块
+        html += '<div class="cell has-cls" style="grid-column:' + col + '; grid-row:' + gridRow + ';">';
+        html += '<div class="event-block"><div class="ev-name">🚀 ' + ev.name + '</div><div class="ev-meta">' + fmtMD(d) + '</div></div>';
+        html += '</div>';
+        return;
+      }
+
+      const cls = (classesByDate[ds] || []).find(c => c.start >= slotStart && c.start < slotEnd);
+      if (cls) {
+        const color = colorOf(cls.subject);
+        html += '<div class="cell has-cls" style="grid-column:' + col + '; grid-row:' + gridRow + ';">';
+        html += '<div class="cls" style="background:' + color.bg + '; border-left: 3px solid ' + color.dot + '; color:' + color.fg + ';">';
+        html += '<div class="cls-subject">' + iconOf(cls.subject) + ' ' + cls.subject + '</div>';
+        html += '<div class="cls-time">' + cls.start + ' – ' + cls.end + '</div>';
+        html += '</div></div>';
+        return;
+      }
+
+      // 空格子
+      html += '<div class="cell empty ' + (slot.narrow ? 'narrow' : '') + ' ' + (out ? 'out' : '') + '" style="grid-column:' + col + '; grid-row:' + gridRow + ';"></div>';
+    });
+  });
+
+  html += '</div></section>';
+  return html;
+}
+
+function renderWeekList(week, classesByDate, eventsByDate, weekNo) {
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(week.start); d.setDate(week.start.getDate() + i);
+    days.push(d);
+  }
+  const inPeriod = (d) => {
+    const ds = d.toISOString().slice(0,10);
+    const s = window.__periodStart, e = window.__periodEnd;
+    return ds >= s && ds <= e;
+  };
+
+  let html = '<div class="list-week"><h2>第' + weekNo + '周 · ' + fmtMD(week.start) + ' – ' + fmtMD(week.end) + '</h2>';
+  let hasContent = false;
+  days.forEach(d => {
+    if (!inPeriod(d)) return;
+    const ds = d.toISOString().slice(0,10);
+    const cls = (classesByDate[ds] || []).sort((a,b) => a.start.localeCompare(b.start));
+    const evs = eventsByDate[ds] || [];
+    if (cls.length === 0 && evs.length === 0) return;
+    hasContent = true;
+    html += '<div class="list-day">';
+    html += '<div class="list-date"><b>' + fmtMD(d) + '</b>' + WD_CN[d.getDay()] + '</div>';
+    html += '<div class="list-cls">';
+    evs.forEach(e => {
+      html += '<span class="list-cls-chip" style="background:#fff7ed;color:#9a3412;border-left:3px solid #ea580c;">🚀 ' + e.name + '</span>';
+    });
+    cls.forEach(c => {
+      const color = colorOf(c.subject);
+      html += '<span class="list-cls-chip" style="background:' + color.bg + ';color:' + color.fg + ';border-left:3px solid ' + color.dot + ';">'
+            + iconOf(c.subject) + ' ' + c.subject + ' · ' + c.start + '–' + c.end + '</span>';
+    });
+    html += '</div></div>';
+  });
+  if (!hasContent) html += '<div style="color:var(--text-mute);font-size:14px;">本周无安排</div>';
+  html += '</div>';
+  return html;
+}
+
+// ---------- 启动 ----------
+window.addEventListener('DOMContentLoaded', async () => {
+  // 注入 period 范围
+  try {
+    const r = await fetch('./schedule.json', { cache: 'no-cache' });
+    const d = await r.json();
+    window.__periodStart = d.period.start;
+    window.__periodEnd   = d.period.end;
+  } catch (e) {}
+  main();
+});
+</script>
+</body>
+</html>

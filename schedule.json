@@ -1,0 +1,390 @@
+{
+  "kid": "郭锴熠",
+  "period": {
+    "start": "2026-06-25",
+    "end": "2026-08-31",
+    "label": "暑假"
+  },
+  "created_at": "2026-06-24T10:10:00+08:00",
+  "updated_at": "2026-06-27T19:17:43+08:00",
+  "classes": [
+    {
+      "id": "C001",
+      "subject": "化学",
+      "teacher": "化学老师",
+      "date": "2026-07-02",
+      "weekday": "周四",
+      "start": "17:00",
+      "end": "19:00",
+      "location": null,
+      "note": "与 19:00 物理晚课衔接"
+    },
+    {
+      "id": "P003",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-06-30",
+      "weekday": "周二",
+      "start": "17:00",
+      "end": "19:00",
+      "location": null,
+      "note": "下午课"
+    },
+    {
+      "id": "P001",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-07-01",
+      "weekday": "周三",
+      "start": "17:00",
+      "end": "19:00",
+      "location": null,
+      "note": "下午课"
+    },
+    {
+      "id": "M001",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-07-01",
+      "weekday": "周三",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "15号前首批课程"
+    },
+    {
+      "id": "P004",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-07-02",
+      "weekday": "周四",
+      "start": "19:00",
+      "end": "21:00",
+      "location": null,
+      "note": "晚课"
+    },
+    {
+      "id": "M002",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-07-03",
+      "weekday": "周五",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "15号前首批课程"
+    },
+    {
+      "id": "P005",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-07-04",
+      "weekday": "周六",
+      "start": "19:00",
+      "end": "21:00",
+      "location": null,
+      "note": "晚课"
+    },
+    {
+      "id": "M003",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-07-06",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "15号前首批课程"
+    },
+    {
+      "id": "C002",
+      "subject": "化学",
+      "teacher": "化学老师",
+      "date": "2026-07-07",
+      "weekday": "周二",
+      "start": "17:00",
+      "end": "19:00",
+      "location": null,
+      "note": "暂排；当天无物理晚课"
+    },
+    {
+      "id": "P007",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-07-08",
+      "weekday": "周三",
+      "start": "17:00",
+      "end": "19:00",
+      "location": null,
+      "note": "下午课"
+    },
+    {
+      "id": "P008",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-07-10",
+      "weekday": "周五",
+      "start": "17:00",
+      "end": "19:00",
+      "location": null,
+      "note": "下午课"
+    },
+    {
+      "id": "M004",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-07-10",
+      "weekday": "周五",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "15号前首批课程"
+    },
+    {
+      "id": "M005",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-07-13",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "15号前首批课程"
+    },
+    {
+      "id": "M006",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-07-27",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M007",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-07-31",
+      "weekday": "周五",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M008",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-03",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M009",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-07",
+      "weekday": "周五",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M010",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-10",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M011",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-14",
+      "weekday": "周五",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M012",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-17",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M013",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-21",
+      "weekday": "周五",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M014",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-24",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M015",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-28",
+      "weekday": "周五",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "M016",
+      "subject": "数学",
+      "teacher": "数学老师",
+      "date": "2026-08-31",
+      "weekday": "周一",
+      "start": "13:30",
+      "end": "15:30",
+      "location": null,
+      "note": "25号后周一周五循环"
+    },
+    {
+      "id": "P011",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-06-27",
+      "weekday": "周六",
+      "start": "14:50",
+      "end": "16:50",
+      "location": null,
+      "note": "下午课"
+    },
+    {
+      "id": "P012",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-06-28",
+      "weekday": "周日",
+      "start": "14:50",
+      "end": "16:50",
+      "location": null,
+      "note": "下午课"
+    },
+    {
+      "id": "P006",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-07-06",
+      "weekday": "周一",
+      "start": "17:00",
+      "end": "19:00",
+      "location": null,
+      "note": "下午课"
+    },
+    {
+      "id": "P002",
+      "subject": "物理",
+      "teacher": "物理老师",
+      "date": "2026-07-07",
+      "weekday": "周二",
+      "start": "19:00",
+      "end": "21:00",
+      "location": "",
+      "note": "晚课（与 17:00 化学衔接）"
+    }
+  ],
+  "teachers": {
+    "数学老师": {
+      "subject": "数学",
+      "name": null,
+      "total_classes": 16
+    },
+    "物理老师": {
+      "subject": "物理",
+      "name": null,
+      "total_classes": 10,
+      "image_only": true,
+      "image_covers": "2026-06-29 → 2026-07-19"
+    },
+    "化学老师": {
+      "subject": "化学",
+      "name": null,
+      "total_classes": 2
+    }
+  },
+  "gaps": [
+    {
+      "subject": "物理",
+      "range": "2026-07-20 → 2026-08-31",
+      "reason": "图片覆盖到 7/19；7/20-7/24 已被飞跃理想项目占位；7/25-8/31 物理无图，需 Grace 确认是否有更多排期"
+    }
+  ],
+  "conflicts": [],
+  "source_messages": [
+    {
+      "timestamp": "2026-06-24T10:10:23+08:00",
+      "raw": "数学课，15号之前我们数学课时间放在下午13:30-15:30可以吗？具体日期是7月1号/3号/6号/10号/13号。\n25号之后可以按周一周五这个时间排课",
+      "summary": "数学 13:30-15:30：7/1, 7/3, 7/6, 7/10, 7/13 + 7/25后周一周五"
+    },
+    {
+      "timestamp": "2026-06-24T10:10:40+08:00",
+      "type": "image",
+      "raw": "2026暑假课表（图片）",
+      "summary": "物理：早 8-10 (周一/三/五) + 晚 19-21 (周二/四/六)，可见范围 6/29-7/19"
+    },
+    {
+      "timestamp": "2026-06-24T10:11:25+08:00",
+      "raw": "6.30号 下午16：30-18：30 7.7号 下午 15：30-17：00 (暂排) 7.7号 如果下午5-7我这边学生不上 就化学物理挨着 ，这个是化学排课",
+      "summary": "化学 6/30 16:30-18:30, 7/7 15:30-17:00(暂排)，含 7/7 5-7pm 衔接备注"
+    },
+    {
+      "timestamp": "2026-06-24T10:12:13+08:00",
+      "raw": "7月14-24是全天飞跃理想项目，孩子去成都和香港",
+      "summary": "事件块：7/14-7/24 飞跃理想项目（成都+香港）"
+    },
+    {
+      "timestamp": "2026-06-24T10:13:27+08:00",
+      "raw": "7月9号和11号是没有物理课的",
+      "summary": "确认 7/9 周四、7/11 周六 无物理晚课（与图片一致）"
+    }
+  ],
+  "events": [
+    {
+      "id": "EVT001",
+      "name": "飞跃理想项目",
+      "type": "offsite_activity",
+      "start_date": "2026-07-14",
+      "end_date": "2026-07-24",
+      "duration": "全天",
+      "location": [
+        "成都",
+        "香港"
+      ],
+      "note": "孩子外出，期间无本地课程"
+    }
+  ]
+}
