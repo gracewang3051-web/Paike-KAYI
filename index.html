@@ -2,8 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-title>郭锴熠 暑假课表</title>
+<title>郭锴熠 暑假课表</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -139,11 +138,11 @@ title>郭锴熠 暑假课表</title>
   .cell.out { background: transparent; }
   .cell.empty { background: var(--border-soft); }
   .cell.empty.narrow { background: var(--border-soft); }
-  .cell.has-cls { background: transparent; padding: 4px; }
+  .cell.has-cls { background: transparent; padding: 4px; display: flex; flex-direction: column; gap: 4px; }
   .cls {
     padding: 8px 10px;
     font-size: 13px;
-    height: 100%;
+    min-height: 44px;
     display: flex; flex-direction: column; justify-content: center;
     overflow: hidden;
   }
@@ -468,14 +467,18 @@ function renderWeekGrid(week, classesByDate, eventsByDate, weekNo) {
         return;
       }
 
-      const cls = (classesByDate[ds] || []).find(c => c.start >= slotStart && c.start < slotEnd);
-      if (cls) {
-        const color = colorOf(cls.subject);
+      // 一个 slot 可能有多节课（跨段 + 同日同段），堆叠显示
+      const clsList = (classesByDate[ds] || []).filter(c => c.start >= slotStart && c.start < slotEnd);
+      if (clsList.length > 0) {
         html += '<div class="cell has-cls" style="grid-column:' + col + '; grid-row:' + gridRow + ';">';
-        html += '<div class="cls" style="background:' + color.bg + '; border-left: 3px solid ' + color.dot + '; color:' + color.fg + ';">';
-        html += '<div class="cls-subject">' + iconOf(cls.subject) + ' ' + cls.subject + '</div>';
-        html += '<div class="cls-time">' + cls.start + ' – ' + cls.end + '</div>';
-        html += '</div></div>';
+        clsList.forEach(cls => {
+          const color = colorOf(cls.subject);
+          html += '<div class="cls" style="background:' + color.bg + '; border-left: 3px solid ' + color.dot + '; color:' + color.fg + ';">';
+          html += '<div class="cls-subject">' + iconOf(cls.subject) + ' ' + cls.subject + '</div>';
+          html += '<div class="cls-time">' + cls.start + ' – ' + cls.end + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
         return;
       }
 
