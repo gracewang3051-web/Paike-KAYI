@@ -508,7 +508,7 @@ function renderWeekGrid(week, classesByDate, eventsByDate, weekNo) {
         html += '<div class="cell has-cls" style="grid-column:' + col + '; grid-row:' + gridRow + ';">';
         clsList.forEach(cls => {
           const color = colorOf(cls.subject);
-          html += '<div class="cls" style="background:' + color.bg + '; border-left: 3px solid ' + color.dot + '; color:' + color.fg + ';">';
+          html += '<div class="cls" style="background:' + color.bg + '; color:' + color.fg + ';">';
           html += '<div class="cls-subject">' + iconOf(cls.subject) + ' ' + cls.subject + '</div>';
           html += '<div class="cls-time">' + cls.start + ' – ' + cls.end + '</div>';
           html += '</div>';
@@ -551,11 +551,11 @@ function renderWeekList(week, classesByDate, eventsByDate, weekNo) {
     html += '<div class="list-date"><b>' + fmtMD(d) + '</b>' + WD_CN[d.getDay()] + '</div>';
     html += '<div class="list-cls">';
     evs.forEach(e => {
-      html += '<span class="list-cls-chip" style="background:#fff7ed;color:#9a3412;border-left:3px solid #ea580c;">🚀 ' + e.name + '</span>';
+      html += '<span class="list-cls-chip" style="background:#fff7ed;color:#9a3412;">🚀 ' + e.name + '</span>';
     });
     cls.forEach(c => {
       const color = colorOf(c.subject);
-      html += '<span class="list-cls-chip" style="background:' + color.bg + ';color:' + color.fg + ';border-left:3px solid ' + color.dot + ';">'
+      html += '<span class="list-cls-chip" style="background:' + color.bg + ';color:' + color.fg + ';">'
             + iconOf(c.subject) + ' ' + c.subject + ' · ' + c.start + '–' + c.end + '</span>';
     });
     html += '</div></div>';
