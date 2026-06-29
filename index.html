@@ -258,6 +258,13 @@ const SLOTS = [
 // ---------- 工具：日期处理 ----------
 const WD_CN = ['周日','周一','周二','周三','周四','周五','周六'];
 function parseDate(s) { return new Date(s + 'T00:00:00'); }
+function localYMD(d) {
+  // 用本地年月日（不是 UTC），避免时区错位
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
 function fmtMD(d) {
   return (d.getMonth()+1) + '/' + d.getDate();
 }
@@ -395,7 +402,7 @@ function renderWeeks(data) {
   const eventsByDate = {};
   (data.events || []).forEach(e => {
     eachDateInRange(e.start_date, e.end_date).forEach(d => {
-      const ds = d.toISOString().slice(0,10);
+      const ds = localYMD(d);
       (eventsByDate[ds] = eventsByDate[ds] || []).push(e);
     });
   });
@@ -421,7 +428,7 @@ function renderWeekGrid(week, classesByDate, eventsByDate, weekNo) {
   }
   // 用更直接的方式：判断是否在 period 范围内
   const inPeriod = (d) => {
-    const ds = d.toISOString().slice(0,10);
+    const ds = localYMD(d);
     // 通过全局 data.period 判定
     const s = window.__periodStart, e = window.__periodEnd;
     return ds >= s && ds <= e;
@@ -449,7 +456,7 @@ function renderWeekGrid(week, classesByDate, eventsByDate, weekNo) {
 
     days.forEach((d, i) => {
       const col = i + 2; // 1-based, slot-label 占第 1 列
-      const ds = d.toISOString().slice(0,10);
+      const ds = localYMD(d);
       const out = !inPeriod(d);
       const slotStart = slot.start;
       const slotEnd = slot.end;
@@ -500,7 +507,7 @@ function renderWeekList(week, classesByDate, eventsByDate, weekNo) {
     days.push(d);
   }
   const inPeriod = (d) => {
-    const ds = d.toISOString().slice(0,10);
+    const ds = localYMD(d);
     const s = window.__periodStart, e = window.__periodEnd;
     return ds >= s && ds <= e;
   };
@@ -509,7 +516,7 @@ function renderWeekList(week, classesByDate, eventsByDate, weekNo) {
   let hasContent = false;
   days.forEach(d => {
     if (!inPeriod(d)) return;
-    const ds = d.toISOString().slice(0,10);
+    const ds = localYMD(d);
     const cls = (classesByDate[ds] || []).sort((a,b) => a.start.localeCompare(b.start));
     const evs = eventsByDate[ds] || [];
     if (cls.length === 0 && evs.length === 0) return;
