@@ -278,13 +278,15 @@ function startOfWeek(d) {
 
 // ---------- 主流程 ----------
 async function main() {
+  const content = document.getElementById('content');
+  content.innerHTML = ''; // 清掉初始的"加载中"
   let data;
   try {
     const res = await fetch('./schedule.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     data = await res.json();
   } catch (e) {
-    document.getElementById('content').innerHTML =
+    content.innerHTML =
       '<div class="err">加载 schedule.json 失败：' + e.message + '<br><br>如果你是访问部署后的 URL，可能部署未完成，请稍后重试。</div>';
     return;
   }
