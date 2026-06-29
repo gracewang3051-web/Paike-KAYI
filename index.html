@@ -289,7 +289,7 @@ async function main() {
   content.innerHTML = ''; // 清掉初始的"加载中"
   let data;
   try {
-    const res = await fetch('./schedule.json', { cache: 'no-cache' });
+    const res = await fetch('./schedule.json?ts=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     data = await res.json();
   } catch (e) {
@@ -297,24 +297,32 @@ async function main() {
       '<div class="err">加载 schedule.json 失败：' + e.message + '<br><br>如果你是访问部署后的 URL，可能部署未完成，请稍后重试。</div>';
     return;
   }
-  renderHeader(data);
-  renderStats(data);
+  // 过滤掉今天之前的课程（今天及之后保留）
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayStr = localYMD(today);
+  const originalCount = (data.classes || []).length;
+  data.classes = (data.classes || []).filter(c => c.date >= todayStr);
+  const filteredCount = originalCount - data.classes.length;
+  renderHeader(data, today);
+  renderStats(data, filteredCount);
   renderLegend(data);
   renderGaps(data);
   renderEvents(data);
-  renderWeeks(data);
+  renderWeeks(data, today);
   setupViewSwitch();
   document.getElementById('updated').textContent = (data.updated_at || '').replace('T', ' ').slice(0, 16);
 }
 
-function renderHeader(data) {
+function renderHeader(data, today) {
   document.getElementById('hdr-title').textContent = data.kid + ' 暑假课表';
   const p = data.period || {};
+  const todayLabel = today ? ' · 📅 今日 ' + (today.getMonth()+1) + '/' + today.getDate() : '';
   document.getElementById('hdr-meta').textContent =
-    (p.label || '课表') + ' · ' + (p.start || '') + ' → ' + (p.end || '');
+    (p.label || '课表') + ' · ' + (p.start || '') + ' → ' + (p.end || '') + todayLabel;
 }
 
-function renderStats(data) {
+function renderStats(data, filteredCount) {
   const counts = {};
   data.classes.forEach(c => { counts[c.subject] = (counts[c.subject] || 0) + 1; });
   const subjects = Object.keys(counts).sort();
@@ -328,9 +336,13 @@ function renderStats(data) {
   });
   html += '<div class="stat-card" style="background:#44403c;color:#fafaf9;">'
        +  '<div class="stat-num">' + data.classes.length + '</div>'
-       +  '<div class="stat-subj">📊 总节数</div>'
+       +  '<div class="stat-subj">📊 待上节数</div>'
        +  '</div>';
   document.getElementById('stats').innerHTML = html;
+  if (filteredCount > 0) {
+    document.getElementById('stats').insertAdjacentHTML('afterend',
+      '<div style="background:#fef3c7;border-left:3px solid #f59e0b;border-radius:12px;padding:12px 18px;margin-bottom:20px;color:#92400e;font-size:14px;">⏭ 已隐藏 ' + filteredCount + ' 节过期课程（今天之前）</div>');
+  }
 }
 
 function renderLegend(data) {
@@ -375,7 +387,7 @@ function setupViewSwitch() {
 }
 
 // ---------- 周渲染 ----------
-function renderWeeks(data) {
+function renderWeeks(data, today) {
   const startStr = data.period && data.period.start;
   const endStr   = data.period && data.period.end;
   if (!startStr || !endStr) return;
@@ -414,7 +426,10 @@ function renderWeeks(data) {
   const gridHost = c.querySelector('.view-panel.grid-view');
   const listHost = c.querySelector('.view-panel.list-view');
 
+  const todayStr = localYMD(today);
   weeks.forEach((w, idx) => {
+    // 整周已经过了（week.end < today）→ 跳过该周
+    if (localYMD(w.end) < todayStr) return;
     gridHost.insertAdjacentHTML('beforeend', renderWeekGrid(w, classesByDate, eventsByDate, idx + 1));
     listHost.insertAdjacentHTML('beforeend', renderWeekList(w, classesByDate, eventsByDate, idx + 1));
   });
@@ -543,7 +558,7 @@ function renderWeekList(week, classesByDate, eventsByDate, weekNo) {
 window.addEventListener('DOMContentLoaded', async () => {
   // 注入 period 范围
   try {
-    const r = await fetch('./schedule.json', { cache: 'no-cache' });
+    const r = await fetch('./schedule.json?ts=' + Date.now(), { cache: 'no-store' });
     const d = await r.json();
     window.__periodStart = d.period.start;
     window.__periodEnd   = d.period.end;
