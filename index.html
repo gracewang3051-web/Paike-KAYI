@@ -159,6 +159,18 @@
   }
   .event-block .ev-name { font-weight: 600; }
   .event-block .ev-meta { font-size: 11px; opacity: .8; margin-top: 2px; }
+  /* 跨 5 行的事件大块 */
+  .cell.event-cell { background: transparent; padding: 4px; }
+  .event-block.big {
+    padding: 14px 12px; font-size: 14px;
+    height: 100%; min-height: 200px;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    border-left: 4px solid #ea580c;
+    background: #fff7ed;
+    border-radius: 8px;
+  }
+  .event-block.big .ev-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .event-block.big .ev-meta { font-size: 12px; opacity: .85; margin-top: 0; }
 
   /* 待确认 / 飞跃理想 */
   .gaps {
@@ -476,18 +488,17 @@ function renderWeekGrid(week, classesByDate, eventsByDate, weekNo) {
       const slotStart = slot.start;
       const slotEnd = slot.end;
 
-      // 事件优先
+      // 事件优先：每天合并成 1 个跨 5 行的大块
       const evs = eventsByDate[ds] || [];
-      const ev = evs.find(e => {
-        // 事件占满整天，跳过格子（让 slot 整体被一个事件块占）
-        return e.start_date <= ds && ds <= e.end_date;
-      });
+      const ev = evs.find(e => e.start_date <= ds && ds <= e.end_date);
       if (ev) {
-        // 只在第一个 slot 显示事件块，其他 slot 该列留空（这里用 cell.out 简化）
-        // 改为：每个 slot 都铺一个事件块
-        html += '<div class="cell has-cls" style="grid-column:' + col + '; grid-row:' + gridRow + ';">';
-        html += '<div class="event-block"><div class="ev-name">🚀 ' + ev.name + '</div><div class="ev-meta">' + fmtMD(d) + '</div></div>';
-        html += '</div>';
+        if (rowIdx === 0) {
+          // 跨 5 行（grid-row: 2 / span 5）的大事件块，覆盖上午到晚上
+          html += '<div class="cell has-cls event-cell" style="grid-column:' + col + '; grid-row: 2 / span 5;">';
+          html += '<div class="event-block big"><div class="ev-name">🚀 ' + ev.name + '</div><div class="ev-meta">' + fmtMD(d) + '</div></div>';
+          html += '</div>';
+        }
+        // 其他 rowIdx 不渲染，事件块自然跨 5 行
         return;
       }
 
